@@ -6,261 +6,209 @@
     <title>Vous êtes invité | Événement de Lancement Castingvoixoff</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700;800&family=Chakra+Petch:wght@700&display=swap" rel="stylesheet">
     <style>
+        @property --a { syntax: "<angle>"; inherits: true; initial-value: 0deg; }
+        @property --l { syntax: "<number>"; inherits: true; initial-value: 0; }
+        @property --scale { syntax: "<number>"; inherits: true; initial-value: 0; }
+        
         :root {
-            --bg-color: #4E4958; --brand-red: #B12042; --brand-highlight: #D73A5B;
-            --text-primary: #E8EBF7; --text-secondary: #A9A5B3; --anim-depth: 8px;
+            /* --- REDESIGNED COLOR PALETTE --- */
+            --primary-red: #cb1025;
+            --secondary-purple: #583C87;
+            --highlight-pink: #F9557B;
+            --base-lavender: #E5D9F2;
+
+            --bg-color: #352f44; 
+            --brand-red: #B12042; 
+            --brand-highlight: #e74c6f;
+            --text-primary: #EAE8F2; 
+            --text-secondary: #b2aabd; 
+            --anim-depth: 8px;
+            --glitch-speed: 0.75s;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Poppins', sans-serif; background-color: var(--bg-color); color: var(--text-primary);
             -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; cursor: none;
-            overflow-x: hidden;
+            overflow-x: hidden; 
         }
         
-        .preloader {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000;
-            background-color: var(--bg-color); display: flex; flex-direction: column; justify-content: center; align-items: center;
-            perspective: 1500px;
-            /* MODIFIED: The preloader is now clickable */
-            cursor: none;
-            transition: opacity 0.7s ease-out;
-        }
-        /* NEW: Class to hide the preloader after click */
-        .preloader.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
+        /* --- PAGE STRUCTURE (UNCHANGED) --- */
+        .preloader{position:fixed;top:0;left:0;width:100%;height:100%;z-index:10000;background-color:var(--bg-color);display:flex;flex-direction:column;justify-content:center;align-items:center;perspective:1500px;cursor:none;transition:opacity .5s ease-out}.preloader.hidden{opacity:0;pointer-events:none}.animation-logo-container{width:200px;height:200px;background-color:var(--brand-highlight);border-radius:20px;padding:40px 30px;display:flex;flex-direction:column;justify-content:space-between;transform-style:preserve-3d;box-shadow:var(--anim-depth) var(--anim-depth) 0 var(--brand-red),calc(var(--anim-depth)*2) calc(var(--anim-depth)*2) 45px rgba(0,0,0,.45);opacity:0;transform:rotateY(-90deg);animation:block-entrance 1.2s cubic-bezier(.22,1,.36,1) .5s forwards}.animation-logo-container .bar{height:20px;background-color:var(--text-primary);border-radius:4px;opacity:0;transform:translateX(-150%)}.preloader-prompt{margin-top:2rem;color:var(--text-secondary);font-weight:500;letter-spacing:1px;min-height:1.2em;opacity:0;animation:fade-in-prompt 1s ease 2s forwards}@keyframes fade-in-prompt{to{opacity:1}}@keyframes block-entrance{to{opacity:1;transform:rotateY(0deg)}}@keyframes bar-slide-in{to{opacity:1;transform:translateX(0)}}@keyframes animate-bar1{0%{width:80%}25%{width:40%}50%{width:100%}75%{width:60%}100%{width:80%}}@keyframes animate-bar2{0%{width:40%}25%{width:70%}50%{width:25%}75%{width:55%}100%{width:40%}}@keyframes animate-bar3{0%{width:65%}25%{width:95%}50%{width:50%}75%{width:85%}100%{width:65%}}.bar.bar1{animation:bar-slide-in .8s cubic-bezier(.25,1,.5,1) 1.5s forwards,animate-bar1 1.8s ease-in-out 2.5s infinite}.bar.bar2{animation:bar-slide-in .8s cubic-bezier(.25,1,.5,1) 1.7s forwards,animate-bar2 1.5s ease-in-out 2.7s infinite}.bar.bar3{animation:bar-slide-in .8s cubic-bezier(.25,1,.5,1) 1.9s forwards,animate-bar3 2.0s ease-in-out 2.9s infinite}.event-container{min-height:100vh;width:100%;position:relative;display:flex;align-items:center;justify-content:center;padding:3rem 1.5rem;opacity:0;visibility:hidden;transition:opacity 1.5s ease-out}.event-container.visible{opacity:1;visibility:visible}.custom-cursor{position:fixed;left:0;top:0;width:8px;height:8px;border-radius:50%;background:var(--brand-highlight);box-shadow:0 0 15px var(--brand-highlight),0 0 30px var(--brand-highlight);pointer-events:none;transform:translate(-50%,-50%);z-index:9999;transition:width .3s,height .3s,opacity .3s}.custom-cursor::after{content:'';position:absolute;top:-8px;left:-8px;right:-8px;bottom:-8px;border:2px solid var(--brand-highlight);border-radius:50%;opacity:.5;animation:pulse-cursor 2s infinite}.custom-cursor.pointer{width:40px;height:40px}.custom-cursor.text{width:50px;height:50px;background-color:rgba(231,76,111,.3)}.custom-cursor.hidden{opacity:0}@keyframes pulse-cursor{0%{transform:scale(.8);opacity:.5}70%{transform:scale(1.6);opacity:0}100%{transform:scale(.8);opacity:0}}#particle-vortex{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1}.invitation-card{position:relative;z-index:10;width:100%;max-width:620px;padding:3.5rem;border-radius:1rem;background-color:rgba(45,40,60,.6);backdrop-filter:blur(15px) saturate(120%);-webkit-backdrop-filter:blur(15px) saturate(120%);border:1px solid rgba(255,255,255,.1);box-shadow:0 25px 80px rgba(0,0,0,.5);text-align:center;transform:translateY(20px);opacity:0;transition:transform .5s cubic-bezier(.05,.95,.2,1)}.event-container.visible .invitation-card{animation:reveal-card 1.2s .8s cubic-bezier(.165,.84,.44,1) forwards}@media (max-width:640px){.invitation-card{padding:2.5rem 2rem}}.card-border-glow,.card-glare{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none}.card-border-glow{padding:1px;background:conic-gradient(from var(--angle),transparent 20%,var(--brand-highlight),var(--brand-red),transparent 80%);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:rotate-border 6s linear infinite}.card-glare{background:radial-gradient(circle at var(--mx) var(--my),rgba(255,255,255,.12) 0,transparent 40%)}.card-content{position:relative;z-index:2}.reveal-mask{display:block;overflow:hidden}.reveal-mask>*{transform:translateY(110%);opacity:0;filter:blur(5px)}.event-container.visible .reveal-mask>*{animation:reveal-text 1.2s cubic-bezier(.19,1,.22,1) forwards}.audio-model-container{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin:-2rem 0 2rem 0;height:180px}.invitation-card .logo-container{animation-delay:1.2s}.audio-player{animation-delay:1.3s}.event-title{animation-delay:1.5s}.event-subtitle{animation-delay:1.6s}.event-details{animation-delay:1.8s}.footer-text{animation-delay:1.9s}.logo{width:120px;height:auto;margin-bottom:1rem;filter:drop-shadow(0 0 20px rgba(255,255,255,.3))}.event-title h1{font-size:2.8rem;font-weight:700;margin-bottom:.5rem;color:var(--text-primary)}.event-title .highlight{position:relative;color:var(--brand-highlight);font-family:'Chakra Petch',sans-serif}.glitch[data-text]{position:relative}.glitch[data-text]::before,.glitch[data-text]::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%;background:var(--bg-color);overflow:hidden}.glitch[data-text]::before{left:2px;text-shadow:-2px 0 var(--brand-red);clip:rect(44px,450px,56px,0);animation:glitch-anim-1 var(--glitch-speed) infinite linear alternate-reverse}.glitch[data-text]::after{left:-2px;text-shadow:-2px 0 var(--brand-highlight),2px 2px var(--brand-red);clip:rect(85px,450px,90px,0);animation:glitch-anim-2 var(--glitch-speed) infinite linear alternate-reverse}@keyframes glitch-anim-1{0%{clip:rect(4px,9999px,49px,0)}100%{clip:rect(79px,9999px,15px,0)}}@keyframes glitch-anim-2{0%{clip:rect(33px,9999px,7px,0)}100%{clip:rect(80px,9999px,39px,0)}}.event-subtitle p{color:var(--text-secondary);font-size:1rem;margin-bottom:3rem}.event-details{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-bottom:3.5rem;padding-top:2rem;border-top:1px solid rgba(255,255,255,.15)}.detail-item{display:flex;flex-direction:column;align-items:center;gap:.5rem}.detail-item .label{font-size:.8rem;font-weight:500;color:var(--text-secondary)}.detail-item .value{font-size:1.1rem;font-weight:500;color:var(--text-primary);min-height:1.2em}.footer-text p{font-size:.8rem;color:var(--text-secondary);opacity:.6}@keyframes reveal-card{to{opacity:1;transform:translateY(0)}}@keyframes reveal-text{to{transform:translateY(0);opacity:1;filter:blur(0)}}@keyframes rotate-border{to{--angle:360deg}}
 
-        .animation-logo-container {
-            width: 200px; height: 200px; background-color: var(--brand-highlight); border-radius: 20px;
-            padding: 40px 30px; display: flex; flex-direction: column; justify-content: space-between;
-            transform-style: preserve-3d;
-            box-shadow: var(--anim-depth) var(--anim-depth) 0 var(--brand-red), calc(var(--anim-depth) * 2) calc(var(--anim-depth) * 2) 45px rgba(0, 0, 0, 0.45);
-            opacity: 0; transform: rotateY(-90deg); animation: block-entrance 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        /* --- REDESIGNED CSS MODEL --- */
+        .ai {
+            --s: 30vmin; --p: calc(var(--s) / 4);
+            width: var(--s); aspect-ratio: 1;
+            --bg-color: color-mix(in srgb, var(--secondary-purple), transparent 90%);
+            background: radial-gradient(60% 75% at center, var(--bg-color) 50%, transparent 50%), radial-gradient(75% 60% at center, var(--bg-color) 50%, transparent 50%);
+            padding: var(--p);
+            display: grid; place-items: center; position: relative;
+            border-radius: 50%; transform: scale(0.8);
+            --count: 4; --radius: 6vmin;
         }
-        .animation-logo-container .bar { height: 20px; background-color: var(--text-primary); border-radius: 4px; opacity: 0; transform: translateX(-150%); }
+        .c {
+            opacity: 0.9; position: absolute;
+            width: 10vmin; aspect-ratio: 1; border-radius: 50%;
+            --offset-per-item: calc(360deg / var(--count));
+            --current-angle-offset: calc(var(--offset-per-item) * var(--i) + var(--a));
+            translate: calc(cos(var(--current-angle-offset)) * var(--radius)) calc(sin(var(--current-angle-offset)) * var(--radius) * -1);
+            scale: var(--l, 0.6);
+        }
+        /* --- Color & Style Overhaul --- */
+        .c[data-index="0"] { --i: 0; background: radial-gradient(circle at center, var(--highlight-pink), var(--secondary-purple)); width: 16vmin; }
+        .c[data-index="1"] { --i: 1; background: radial-gradient(circle at center, var(--primary-red), var(--base-lavender)); width: 15vmin; }
+        .c[data-index="2"] { --i: 2; background: radial-gradient(circle at center, var(--highlight-pink), transparent); width: 8vmin; opacity: 0.7;}
+        .c[data-index="3"] { --i: 3; background: var(--secondary-purple); }
 
-        /* NEW: Style for the prompt on the preloader */
-        .preloader-prompt {
-            margin-top: 2rem;
-            color: var(--text-secondary);
-            font-weight: 500;
-            opacity: 0;
-            animation: fade-in-prompt 1s ease 1.5s forwards;
+        .ai .container {
+            background: var(--base-lavender);
+            width: 100%; border-radius: 50%; aspect-ratio: 1; 
+            position: relative; display: grid; place-items: center;
+            transform: scale(var(--core-scale, 1));
+            overflow: hidden; /* CRITICAL FIX: This contains the orbs */
         }
-        @keyframes fade-in-prompt { to { opacity: 1; } }
-
-        @keyframes block-entrance { to { opacity: 1; transform: rotateY(0deg); } }
-        @keyframes bar-slide-in { to { opacity: 1; transform: translateX(0); } }
-        @keyframes animate-bar1 { 0%{width:80%} 25%{width:40%} 50%{width:100%} 75%{width:60%} 100%{width:80%} }
-        @keyframes animate-bar2 { 0%{width:40%} 25%{width:70%} 50%{width:25%} 75%{width:55%} 100%{width:40%} }
-        @keyframes animate-bar3 { 0%{width:65%} 25%{width:95%} 50%{width:50%} 75%{width:85%} 100%{width:65%} }
-        .bar.bar1 { animation: bar-slide-in 0.8s cubic-bezier(0.25, 1, 0.5, 1) 0.8s forwards, animate-bar1 1.8s ease-in-out 1.8s infinite; }
-        .bar.bar2 { animation: bar-slide-in 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.0s forwards, animate-bar2 1.5s ease-in-out 2.0s infinite; }
-        .bar.bar3 { animation: bar-slide-in 0.8s cubic-bezier(0.25, 1, 0.5, 1) 1.2s forwards, animate-bar3 2.0s ease-in-out 2.2s infinite; }
-        
-        .event-container {
-            min-height: 100vh; width: 100%; position: relative;
-            display: flex; align-items: center; justify-content: center; padding: 3rem 1.5rem;
-            /* MODIFIED: Animation is now triggered by JS */
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 1.5s ease-out;
+        .glass {
+            overflow: hidden; position: absolute;
+            --w: 0.5vmin; inset: calc(var(--p) - var(--w));
+            border-radius: 50%; backdrop-filter: blur(1.3vmin);
+            box-shadow: 0 0 var(--shadow-spread, 8vmin) color-mix(in srgb, var(--highlight-pink), transparent 40%);
+            background: radial-gradient(10vmin at 70% 30%, rgba(255, 255, 255, 0.7), transparent);
         }
-        .event-container.visible {
-            opacity: 1;
-            visibility: visible;
+        .glass:after {
+            content: ""; position: absolute; inset: 0;
+            --c: rgba(255, 255, 255, 0.03); --w: 0.0625rem; --g: 0.1875rem;
+            background: repeating-linear-gradient(var(--c), var(--c), var(--w), transparent var(--w), transparent calc(var(--w) + var(--g)));
+            border-radius: inherit; border: 1vmin rgba(255, 255, 255, 0.1) solid;
         }
-
-        .custom-cursor {
-            position: fixed; left: 0; top: 0; width: 24px; height: 24px; border-radius: 50%;
-            background: var(--brand-highlight); box-shadow: 0 0 15px var(--brand-highlight);
-            pointer-events: none; transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s, background-color 0.3s, transform 0.3s, opacity 0.3s;
-            z-index: 9999;
+        .rings {
+            aspect-ratio: 1; border-radius: 50%; position: absolute;
+            inset: 0; perspective: 11rem; opacity: .9; --width: 1vmin;
         }
-        .custom-cursor.pointer { width: 40px; height: 40px; background-color: rgba(215, 58, 91, 0.5); transform: translate(-50%, -50%) scale(0.8); }
-        .custom-cursor.hidden { opacity: 0; }
-        
-        #particle-vortex { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
-        .invitation-card {
-            position: relative; z-index: 10; width: 100%; max-width: 620px; padding: 3.5rem; border-radius: 1rem;
-            background-color: rgba(40, 37, 48, 0.6); backdrop-filter: blur(12px) saturate(120%); -webkit-backdrop-filter: blur(12px) saturate(120%);
-            border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 25px 60px rgba(0,0,0,0.4);
-            text-align: center; 
-            /* MODIFIED: Animation now depends on parent .visible class */
-            transform: translateY(20px); opacity: 0;
-            transition: transform 0.5s cubic-bezier(0.05, 0.95, 0.2, 1);
+        .rings:before, .rings:after {
+            content: ""; position: absolute; inset: 0; border-radius: 50%;
+            --width-ratio: 1;
+            border: calc(var(--width) * var(--width-ratio)) solid transparent;
+            mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            background: linear-gradient(var(--primary-red), var(--highlight-pink), var(--secondary-purple)) border-box;
+            mask-composite: exclude;
+            transform: rotateY(var(--a)) rotateX(var(--a)) scale(var(--scale, 1));
         }
-        .event-container.visible .invitation-card {
-             animation: reveal-card 1.2s 0.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-        }
-        @media (max-width: 640px) { .invitation-card { padding: 2.5rem 2rem; } }
-        .card-border-glow, .card-glare { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
-        .card-border-glow { padding: 1px; background: conic-gradient(from var(--angle), transparent 20%, var(--brand-highlight), var(--brand-red), transparent 80%); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; animation: rotate-border 6s linear infinite; }
-        .card-glare { background: radial-gradient(circle at var(--mx) var(--my), rgba(255,255,255,0.12) 0%, transparent 40%); }
-        .card-content { position: relative; z-index: 2; }
-        .reveal-mask { display: block; overflow: hidden; }
-        .reveal-mask > * { transform: translateY(110%); opacity: 0; filter: blur(5px); }
-        .event-container.visible .reveal-mask > * { animation: reveal-text 1.2s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
-
-        .audio-player-container {
-            position: relative; display: flex; flex-direction: column;
-            align-items: center; gap: 1rem; margin: -1rem 0 2rem 0; height: 160px; 
-        }
-        #three-canvas { width: 100%; height: 100%; z-index: 5; cursor: none; }
-        
-        .invitation-card .logo-container { animation-delay: 0.7s; } .audio-player { animation-delay: 0.8s; }
-        .event-title { animation-delay: 1.0s; } .event-subtitle { animation-delay: 1.1s; }
-        .event-details { animation-delay: 1.3s; } .footer-text { animation-delay: 1.4s; }
-        .logo { width: 120px; height: auto; margin-bottom: 1rem; filter: drop-shadow(0 0 20px rgba(255,255,255,0.3)); }
-        .event-title h1 { font-size: 2.8rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-primary); }
-        .event-title .highlight { color: var(--brand-highlight); }
-        .event-subtitle p { color: var(--text-secondary); font-size: 1rem; margin-bottom: 3rem; }
-        .event-details { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 3.5rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.15); }
-        .detail-item { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
-        .detail-item .label { font-size: 0.8rem; font-weight: 500; color: var(--text-secondary); }
-        .detail-item .value { font-size: 1.1rem; font-weight: 500; color: var(--text-primary); }
-        .footer-text p { font-size: 0.8rem; color: var(--text-secondary); opacity: 0.6; }
-        
-        @keyframes reveal-card { to { opacity: 1; transform: translateY(0); } }
-        @keyframes reveal-text { to { transform: translateY(0); opacity: 1; filter: blur(0); } }
-        @keyframes rotate-border { to { --angle: 360deg; } }
     </style>
 </head>
 <body>
+    
+    <audio id="sfx-warp" src="data:audio/wav;base64,UklGRigBAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQBAAD//////////////////v///P39/f/9/v7/+Pn69/Tz7+7r5+Td2s/KxL23tKyloJmTh4R8enZtZGJgXVtUU0pIRUNDQUA+PDo2My8uLCopIR8eHBkXFRITERAODQsJCAcGBQQDAgEAAAAAAAAAAAAAgAECAwQFBgcICQoLDA0ODxAREhMUFRYXGRobHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2Nzg5Ojs8PT4/QEFCQ0RFRkdISUpMTU5PUFFSU1RVVldYWVpbXF1eX2BhYmNkZWZnaGppbG5vcHFyc3R1dnd4eXp7fH1+f4CBgoOEhYaHiImKi4yNjo+QkZKTlJWWl5iZmpucnZ6foKGio6SlpqeoqaqrrK2ur7CxsrO0tba3uLm6u7y9vr/AwcLDxMXGx8jJysvMzc7P0NHS09TV1tfa29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/w=="></audio>
+    <audio id="sfx-glitch" src="data:audio/wav;base64,UklGRkIAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YfwAAAD8/v3+/v7+/f7+/v79/v7+/v7+/v79/v7+/v7+/v79/v7+/v79/v7+/v7+/v3+/v79/f3+AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/wD/AP8A/AD/AP8A/AD+AP4A/QD+AP4A/AD9AP8A/QD/AP8A/AD+AP4A/QD/AP4A/AD+AP4A/AD+AP4A/QD+AP4A/QD+AP4A/QD+AP4A/AD+AP4A/QD+AP4A/AD+AP4A/AD+AP4A/AD+AP4A/AD+AP4A/QD+AP4A/QD+AP4A/AD+AP4A/QD+AP4A/AD+AP4A/QD+AP4A/AD+AP4A/QD+AP4A/QD+AP4A/QD+AP4A/QD+AP4A/QD+AP4A/QD+AP4A/QD+AP4A/AD9AP4A/AD9AP4A/QD9AP4A/QD9AP4A/AD9AP4A/AD9AP4A/QD9AP4A/QD9AP4A/QD9AP4A/AD9AP4A/AD9AP4A/AD9AP4A/AD9AP4A/AD9AP4A/AD9AP4A/AD9AP4A/AD9AP4A/QD9AP4A/AD9AP4A/QD9AP4A/QD9AP4A/QD9AP4A/QD9AP4A/QD9AP4A/QD9AP4A/AD9AP4A/QD9AP4A/QD9AP4A/AD9AP4A/QD9AP4A/QD9AP4A/AD9AP4aANgAGP8DABf/GwEQAFT+IQA9AIb/WwEBBDn+qgI9BnL/5ANuCQABEQVlCYkFrARNBZ8GAgXnBWMGswW3BbAFogVzBVgFIgT8A+cD3gPrA9oD5wPeA+cD4APkA+gD8AP8A/kD/gP+BAAE9AQ4BP0FBgUMBQkFNAVsBb8F4QXABeUF4QXABb0FvwW3BbEFsAWtBbAFsgW7BcAF3QXZBeQF5QXgBeMF9AYaBqsGwwbPBtUG2wbZBtgGzQbLBrYGvwbGBscGwwbBBq8GpgalBqAGnwaFBpQGlAaeBqIGsAbDBswGzwbUBtsG3wbjBu8G+AcECAsIFwgfCCcIMQg1CD0IQAhGCEwIVghfCGgIdwiBCI8IoAihCKsIsAjCCMsI2AjqCPkJAQlCCUwJVQlfCWoJdAmCCY8JpAnDCc8J4An7CgULMgo4Cj8KSApWCmsKggqZCqsK0wrzCg=="></audio>
 
-    <div class="preloader">
-        <div class="animation-logo-container">
-            <div class="bar bar1"></div> <div class="bar bar2"></div> <div class="bar bar3"></div>
-        </div>
-        <!-- NEW: Prompt to guide the user -->
-        <div class="preloader-prompt">Cliquez pour découvrir votre invitation</div>
-    </div>
+    <div class="preloader"><div class="animation-logo-container"><div class="bar bar1"></div> <div class="bar bar2"></div> <div class="bar bar3"></div></div><div class="preloader-prompt" id="preloaderPrompt"> </div></div>
 
     <div class="event-container" id="eventContainer">
         <canvas id="particle-vortex"></canvas>
         <div class="custom-cursor" id="cursor"></div>
-
         <div class="invitation-card" id="invitationCard">
             <div class="card-border-glow"></div> <div class="card-glare"></div>
             <div class="card-content">
-                <div class="reveal-mask logo-container">
-                    <img src="logopng2.png" alt="Logo Castingvoixoff" class="logo" />
-                </div>
-                <div class="reveal-mask audio-player">
-                    <div class="audio-player-container">
-                        <canvas id="three-canvas"></canvas>
+                <div class="reveal-mask logo-container"> <img src="logopng2.png" alt="Logo Castingvoixoff" class="logo" /> </div>
+                <div class="reveal-mask audio-player"> 
+                    <div class="audio-model-container">
+                        <div class="ai" id="aiModel">
+                            <div class="container">
+                                <div class="c" data-index="0"></div><div class="c" data-index="1"></div>
+                                <div class="c" data-index="2"></div><div class="c" data-index="3"></div>
+                                <div class="rings"></div>
+                            </div>
+                            <div class="glass"></div>
+                        </div>
                     </div>
                 </div>
-                <div class="reveal-mask event-title"> <h1>Invitation <span class="highlight">Exclusive</span></h1> </div>
+                <div class="reveal-mask event-title"> <h1>Invitation <span class="highlight glitch" data-text="Exclusive">Exclusive</span></h1> </div>
                 <div class="reveal-mask event-subtitle"> <p>Vous êtes convié au lancement de la plateforme Castingvoixoff</p> </div>
                 <div class="reveal-mask event-details">
-                    <div><div class="detail-item"><div class="label">Date</div><div class="value">31 Aout</div></div></div>
-                    <div><div class="detail-item"><div class="label">Heure</div><div class="value">19h00</div></div></div>
-                    <div><div class="detail-item"><div class="label">Lieu</div><div class="value">Maarif</div></div></div>
+                    <div><div class="detail-item"><div class="label">Date</div><div class="value" id="detail-date"></div></div></div>
+                    <div><div class="detail-item"><div class="label">Heure</div><div class="value" id="detail-heure"></div></div></div>
+                    <div><div class="detail-item"><div class="label">Lieu</div><div class="value" id="detail-lieu"></div></div></div>
                 </div>
                 <div class="reveal-mask footer-text"> <p>© Castingvoixoff.ma</p> </div>
             </div>
         </div>
-
         <audio id="invitationAudio" src="https://store-screenapp-production.storage.googleapis.com/vid/688b85a9ba1cbcacc35be80c/f10fa3a3-2b93-4840-9b94-95891a41a83f.mp3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=GOOG1EINEQV5X2QGY62PSZMBMUR7IGGVLKNDB6ABP5GL6O6FKO76DWA2IE3SB%2F20250731%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20250731T150308Z&X-Amz-Expires=604800&X-Amz-Signature=600bab33724fc451ac5afe1a7a290851b717dbe71979ea97d34741043882ce5e&X-Amz-SignedHeaders=host&response-content-type=attachment%3B%20filename%3D%22f10fa3a3-2b93-4840-9b94-95891a41a83f.mp3%22%3B%20filename%2A%3D%20UTF-8%27%27invitation_audio.mp3%3B#t=0," crossorigin="anonymous"></audio>
     </div>
-
-    <script type="importmap">
-        { "imports": { "three": "https://unpkg.com/three@0.163.0/build/three.module.js" } }
-    </script>
-
+    
     <script type="module">
-        import * as THREE from 'three';
-
         document.addEventListener('DOMContentLoaded', () => {
-            const preloader = document.querySelector('.preloader');
-            const eventContainer = document.getElementById('eventContainer');
-            const cursor = document.getElementById('cursor');
-            const card = document.getElementById('invitationCard');
-            const invitationAudio = document.getElementById('invitationAudio');
+            const preloader = document.querySelector('.preloader'), preloaderPrompt = document.getElementById('preloaderPrompt'), eventContainer = document.getElementById('eventContainer'), cursor = document.getElementById('cursor'), card = document.getElementById('invitationCard'), invitationAudio = document.getElementById('invitationAudio'), sfxWarp = document.getElementById('sfx-warp'), sfxGlitch = document.getElementById('sfx-glitch'); sfxWarp.volume = .5; sfxGlitch.volume = .3;
+            let audioContext, analyser, source, dataArray, audioInitialized = !1;
+            const aiModel = document.getElementById('aiModel'), coreContainer = aiModel.querySelector('.container'), glass = aiModel.querySelector('.glass'), orbs = aiModel.querySelectorAll('.c');
+            const particleCanvas = document.getElementById('particle-vortex'), ptx = particleCanvas.getContext('2d'); let width, height, particles; const particleCount = 3e3, fov = 350; let mouse = { x: 0, y: 0 }, warpSpeed = 3;
+            let currentCoreScale = 1, currentShadowSpread = 8, idleTime = 0, currentOrbScales = Array(4).fill(.6);
+            const lerp = (a, b, c) => (1 - c) * a + c * b;
+            const playSound = a => { a.currentTime = 0; a.play() };
+            const scrambleText = (a, b) => { let c = 0; const d = "█▓▒░</>#?$&@", e = setInterval(() => { const f = d[Math.floor(Math.random() * d.length)], g = b.substring(0, c) + f + b.substring(c + 1).replace(/./g, " "); a.innerHTML = g }, 30), f = setInterval(() => { c++; if (c > b.length) { clearInterval(e); clearInterval(f); a.innerHTML = b } }, 100) };
+            function startExperience() { preloader.classList.add("hidden"); cursor.classList.remove("pointer"); playSound(sfxWarp); let a = Date.now(); const b = 1200; function c() { let d = Date.now() - a; d < b ? (warpSpeed = 3 + 70 * Math.sin(d / b * Math.PI), requestAnimationFrame(c)) : warpSpeed = 3 } c(); eventContainer.classList.add("visible"); setupAudio(); setTimeout(() => { invitationAudio.play().catch(a => console.error("Playback failed:", a)) }, 1500); setTimeout(() => { scrambleText(document.getElementById("detail-date"), "31 Aout"); playSound(sfxGlitch) }, 2e3); setTimeout(() => { scrambleText(document.getElementById("detail-heure"), "19h00"); playSound(sfxGlitch) }, 2200); setTimeout(() => { scrambleText(document.getElementById("detail-lieu"), "Maarif"); playSound(sfxGlitch) }, 2400) }
+            
+            // --- RE-ENGINEERED Animation Loop ---
+            function animateCssModel() {
+                requestAnimationFrame(animateCssModel);
+                let targetCoreScale = 1;
+                let targetShadowSpread = 8;
+                const targetOrbScales = Array(4).fill(0.6);
 
-            let audioContext, analyser, source, dataArray;
-            let audioInitialized = false;
+                if (audioInitialized && !invitationAudio.paused) {
+                    analyser.getByteFrequencyData(dataArray);
+                    const vocalRange = dataArray.slice(1, 12);
+                    const vocalSum = vocalRange.reduce((a, b) => a + b, 0);
+                    const vocalAvg = vocalSum / vocalRange.length || 0;
+                    const vocalPulse = vocalAvg / 255; // A value from 0 to 1
 
-            let scene, camera, renderer, model, ring1, ring2;
-            const clock = new THREE.Clock();
-            const threeCanvas = document.getElementById('three-canvas');
-
-            function initThreeJS() { /* ... (no changes in this function) ... */
-                scene = new THREE.Scene(); camera = new THREE.PerspectiveCamera(75, threeCanvas.clientWidth / threeCanvas.clientHeight, 0.1, 1000); camera.position.z = 3.5; renderer = new THREE.WebGLRenderer({ canvas: threeCanvas, alpha: true }); renderer.setPixelRatio(window.devicePixelRatio); renderer.setSize(threeCanvas.clientWidth, threeCanvas.clientHeight); renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.2; renderer.outputColorSpace = THREE.SRGBColorSpace; const ambientLight = new THREE.AmbientLight(0xffffff, 1.5); scene.add(ambientLight); const directionalLight = new THREE.DirectionalLight(0xffffff, 2.5); directionalLight.position.set(5, 5, 5); scene.add(directionalLight); model = new THREE.Group(); model.position.y = -0.2; scene.add(model); const headGeometry = new THREE.SphereGeometry(0.8, 64, 64); const headMaterial = new THREE.MeshStandardMaterial({ color: 0xcccccc, metalness: 0.9, roughness: 0.2, }); const head = new THREE.Mesh(headGeometry, headMaterial); model.add(head); const eyeGeometry = new THREE.CylinderGeometry(0.1, 0.1, 1.7, 32); const eyeMaterial = new THREE.MeshStandardMaterial({ color: 'var(--brand-highlight)', emissive: 'var(--brand-red)', emissiveIntensity: 2, toneMapped: false }); const eye = new THREE.Mesh(eyeGeometry, eyeMaterial); eye.rotation.z = Math.PI / 2; eye.position.z = 0.6; head.add(eye); const ringGeometry = new THREE.TorusGeometry(1.3, 0.03, 16, 100); const ringMaterial = new THREE.MeshStandardMaterial({ color: 0xaaaaaa, metalness: 0.7, roughness: 0.4, }); ring1 = new THREE.Mesh(ringGeometry, ringMaterial); ring1.rotation.x = Math.PI / 2.2; ring2 = ring1.clone(); ring2.scale.set(0.8, 0.8, 0.8); ring2.rotation.y = Math.PI / 3; model.add(ring1, ring2); animateThreeJS();
-            }
-
-            function animateThreeJS() { /* ... (no changes in this function) ... */
-                requestAnimationFrame(animateThreeJS); const elapsedTime = clock.getElapsedTime(); if (model) { model.position.y = -0.2 + Math.sin(elapsedTime * 1.5) * 0.1; if(ring1) ring1.rotation.z += 0.008; if(ring2) ring2.rotation.z -= 0.005; if (audioInitialized && !invitationAudio.paused) { analyser.getByteFrequencyData(dataArray); let sum = dataArray.reduce((a, b) => a + b, 0); let avg = sum / dataArray.length || 0; const baseScale = 1.0; const pulse = (avg / 255) * 0.2; const targetScale = baseScale + pulse; model.scale.lerp(new THREE.Vector3(targetScale, targetScale, targetScale), 0.2); model.rotation.y += 0.005 + (pulse * 0.05); } else { model.scale.lerp(new THREE.Vector3(1.0, 1.0, 1.0), 0.1); model.rotation.y += 0.002; } } if (renderer) renderer.render(scene, camera);
-            }
-
-            function setupAudio() {
-                if (audioInitialized) return;
-                try {
-                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    source = audioContext.createMediaElementSource(invitationAudio);
-                    analyser = audioContext.createAnalyser();
-                    analyser.fftSize = 128;
-                    source.connect(analyser);
-                    analyser.connect(audioContext.destination);
-                    dataArray = new Uint8Array(analyser.frequencyBinCount);
-                    audioInitialized = true;
-                } catch (e) { console.error("Error setting up Web Audio API:", e); }
-            }
-
-            // --- NEW: Main function to start the experience after the click ---
-            function startExperience() {
-                // 1. Hide the preloader
-                preloader.classList.add('hidden');
-                cursor.classList.remove('pointer');
-
-                // 2. Show the main event container
-                eventContainer.classList.add('visible');
+                    // 1. The Core "Mouth"
+                    targetCoreScale = 1 + vocalPulse * 0.4;
+                    // 2. The Glass "Aura"
+                    targetShadowSpread = 8 + vocalPulse * 12;
+                    // 3. The Orb "Energy"
+                    orbs.forEach(orb => {
+                        const index = parseInt(orb.dataset.index);
+                        const wave = (Math.sin(idleTime * 2 + index * 1.5) + 1) / 2; // Unique sine wave for each orb
+                        // Audio makes the existing dance BIGGER and more energetic
+                        targetOrbScales[index] = 0.4 + wave * (0.6 + vocalPulse * 2.5);
+                    });
+                    idleTime += 0.015;
+                } else {
+                    // Idle animation is a slow, gentle, continuous "breathing"
+                    idleTime += 0.02;
+                    const idlePulse = (Math.sin(idleTime) + 1) / 2;
+                    targetCoreScale = 1 + idlePulse * 0.05;
+                    targetShadowSpread = 8 + idlePulse * 2;
+                    orbs.forEach(orb => {
+                        const index = parseInt(orb.dataset.index);
+                        const wave = (Math.sin(idleTime * 2 + index * 1.5) + 1) / 2;
+                        targetOrbScales[index] = 0.4 + wave * 0.4;
+                    });
+                }
                 
-                // 3. Setup and play the audio with a slight delay to sync with animations
-                setupAudio();
-                setTimeout(() => {
-                    invitationAudio.play().catch(e => console.error("Playback failed:", e));
-                }, 800); // Delay matches the card reveal animation
+                // Smoothly interpolate current values towards targets for fluid motion
+                currentCoreScale = lerp(currentCoreScale, targetCoreScale, 0.4);
+                currentShadowSpread = lerp(currentShadowSpread, targetShadowSpread, 0.4);
+                
+                // Set the CSS Custom Properties
+                coreContainer.style.setProperty('--core-scale', currentCoreScale);
+                glass.style.setProperty('--shadow-spread', `${currentShadowSpread}vmin`);
+                aiModel.style.setProperty('--a', `${idleTime * 20}deg`); // Controls overall rotation
+                
+                orbs.forEach((orb, i) => {
+                    const index = parseInt(orb.dataset.index);
+                    currentOrbScales[index] = lerp(currentOrbScales[index], targetOrbScales[index], 0.3);
+                    orb.style.setProperty('--l', currentOrbScales[index]);
+                });
             }
 
-            preloader.addEventListener('mouseenter', () => cursor.classList.add('pointer'));
-            preloader.addEventListener('mouseleave', () => cursor.classList.remove('pointer'));
-
-            // The one-time click listener to kick everything off
-            preloader.addEventListener('click', startExperience, { once: true });
-
-            initThreeJS();
-
-            // --- PARTICLE VORTEX & CARD INTERACTION ---
-            const particleCanvas = document.getElementById('particle-vortex');
-            const ptx = particleCanvas.getContext('2d');
-            let width, height, particles;
-            const particleCount = 2000; const fov = 350; let mouse = { x: 0, y: 0 };
-            function initParticles() { width = particleCanvas.width = window.innerWidth; height = particleCanvas.height = window.innerHeight; particles = []; for (let i = 0; i < particleCount; i++) { particles.push({x: (Math.random()-0.5)*width, y: (Math.random()-0.5)*height, z: Math.random()*2000, pz:0, color: `rgba(${Math.random()<0.5?'215,58,91':'177,32,66'}, ${0.3+Math.random()*0.6})`}); } }
-            function animateParticles() { if (!ptx) return; ptx.clearRect(0, 0, width, height); ptx.save(); ptx.translate(width/2, height/2); for (let i=0; i<particles.length; i++) { const p = particles[i]; p.pz = p.z; p.z -= 3; if (p.z < 1) { p.z = 2000; p.pz = 2000; } const scale = fov/(fov+p.z); const x2d = p.x*scale+(mouse.x*0.1*scale); const y2d = p.y*scale+(mouse.y*0.1*scale); const prevScale = fov/(fov+p.pz); const prevX = p.x*prevScale+(mouse.x*0.1*prevScale); const prevY = p.y*prevScale+(mouse.y*0.1*prevScale); ptx.beginPath(); ptx.moveTo(prevX, prevY); ptx.lineTo(x2d, y2d); ptx.strokeStyle = p.color; ptx.lineWidth = scale*2.5; ptx.stroke(); } ptx.restore(); requestAnimationFrame(animateParticles); }
-            function onVortexMouseMove(e) {
-                mouse.x = e.clientX-width/2; mouse.y = e.clientY-height/2;
-                if (cursor) {
-                    cursor.style.left = e.clientX+'px'; cursor.style.top = e.clientY+'px';
-                }
-                if (card && eventContainer.classList.contains('visible')) {
-                    const cardX = -mouse.x * 0.02; const cardY = -mouse.y * 0.02;
-                    card.style.transform = `translateY(0) translateX(${cardX}px) translateY(${cardY}px) rotateX(${-cardY*0.1}deg) rotateY(${cardX*0.1}deg)`;
-                    const rect = card.getBoundingClientRect();
-                    card.style.setProperty('--mx', `${e.clientX - rect.left}px`);
-                    card.style.setProperty('--my', `${e.clientY - rect.top}px`);
-                }
-            }
-            window.addEventListener('mousemove', onVortexMouseMove);
-            window.addEventListener('resize', initParticles);
-            initParticles(); animateParticles();
+            function setupAudio() { if (audioInitialized) return; try { audioContext = new (window.AudioContext || window.webkitAudioContext), source = audioContext.createMediaElementSource(invitationAudio), analyser = audioContext.createAnalyser(), analyser.fftSize = 128, source.connect(analyser), analyser.connect(audioContext.destination), dataArray = new Uint8Array(analyser.frequencyBinCount), audioInitialized = !0 } catch (a) { console.error("Error setting up Web Audio API:", a) } }
+            function initParticles() { width = particleCanvas.width = window.innerWidth; height = particleCanvas.height = window.innerHeight; particles = []; for (let a = 0; a < particleCount; a++)particles.push({ x: (Math.random() - .5) * width * 1.5, y: (Math.random() - .5) * height * 1.5, z: Math.random() * 2e3, pz: 0, color: `rgba(${Math.random() < .5 ? "231,76,111" : "177,32,66"}, ${.4 + Math.random() * .6})` }) }
+            function animateParticles() { if (!ptx) return; ptx.clearRect(0, 0, width, height); ptx.save(); ptx.translate(width / 2, height / 2); for (let a = 0; a < particles.length; a++) { const b = particles[a]; b.pz = b.z; b.z -= warpSpeed; if (b.z < 1) { b.z = 2e3; b.pz = 2e3 } const c = fov / (fov + b.z), d = b.x * c + mouse.x * .1 * c, e = b.y * c + mouse.y * .1 * c, f = fov / (fov + b.pz), g = b.x * f + mouse.x * .1 * f, h = b.y * f + mouse.y * .1 * f; ptx.beginPath(); ptx.moveTo(g, h); ptx.lineTo(d, e); ptx.strokeStyle = b.color; ptx.lineWidth = Math.max(1, c * 2.5); ptx.stroke() } ptx.restore(); requestAnimationFrame(animateParticles) }
+            function onMouseMove(a) { mouse.x = a.clientX - width / 2; mouse.y = a.clientY - height / 2; if (cursor) { cursor.style.left = a.clientX + "px"; cursor.style.top = a.clientY + "px" } if (preloader.classList.contains("hidden") && card) { const b = -mouse.x * .02, c = -mouse.y * .02; card.style.transform = `perspective(1000px) translateX(${b}px) translateY(${c}px) rotateX(${-c * .1}deg) rotateY(${b * .1}deg)`; const d = card.getBoundingClientRect(); card.style.setProperty("--mx", `${a.clientX - d.left}px`); card.style.setProperty("--my", `${a.clientY - d.top}px`) } }
+            preloader.addEventListener("click", startExperience, { once: !0 }); preloader.addEventListener("mouseenter", () => cursor.classList.add("pointer")); preloader.addEventListener("mouseleave", () => cursor.classList.remove("pointer")); document.querySelectorAll(".detail-item .value, .event-title .highlight").forEach(a => { a.addEventListener("mouseenter", () => cursor.classList.add("text")); a.addEventListener("mouseleave", () => cursor.classList.remove("text")) }); window.addEventListener("mousemove", onMouseMove); window.addEventListener("resize", initParticles); initParticles(); animateParticles(); animateCssModel(); setTimeout(() => { scrambleText(preloaderPrompt, "Cliquez pour découvrir votre invitation") }, 3e3);
         });
     </script>
-
 </body>
 </html>
