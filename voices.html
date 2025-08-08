@@ -131,8 +131,67 @@
             }
 
             // [Unchanged functions: showNotification, handleFavoriteClick]
-            function showNotification(message, isError = false) { /* ... same as before ... */ }
-            async function handleFavoriteClick(event) { /* ... same as before ... */ }
+function showNotification(message, isError = false) {
+    notification.textContent = message;
+    notification.style.backgroundColor = isError ? '#dc3545' : '#28a745';
+    notification.classList.add('show');
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 2500); // Hide after 2.5 seconds
+}
+
+async function handleFavoriteClick(event) {
+    const target = event.target;
+    // Only proceed if a favorite button was clicked
+    if (!target.classList.contains('favorite-btn')) {
+        return;
+    }
+
+    const voiceName = target.dataset.voiceName;
+    target.classList.add('favorited'); // Make star gold immediately
+    target.disabled = true; // Prevent multiple clicks
+
+    const payload = { voiceName: voiceName };
+
+    try {
+        const response = await fetch(GOOGLE_WEB_APP_URL, {
+            method: 'POST',
+            // We are sending data across different domains (localhost -> google.com)
+            // so 'cors' mode is required.
+            mode: 'cors', 
+            headers: {
+                // We must tell the server we are sending JSON data
+                'Content-Type': 'application/json'
+            },
+            // The data must be converted from a JavaScript object to a JSON string
+            body: JSON.stringify(payload) 
+        });
+        
+        // Check if the network request itself was successful
+        if (!response.ok) {
+           throw new Error(`Network response was not ok. Status: ${response.status}`);
+        }
+        
+        // Parse the JSON response from our Apps Script
+        const result = await response.json();
+
+        // Check the 'status' field in the response from our script
+        if (result.status === 'success') {
+            showNotification(`Voice "${voiceName}" added to spreadsheet!`);
+        } else {
+            // If our script reported an error, throw it to be caught below
+            throw new Error(result.message);
+        }
+
+    } catch (error) {
+        console.error('Error sending data to Google Sheet:', error);
+        showNotification(`Error saving "${voiceName}". Check console for details.`, true);
+        
+        // Revert the button to its original state on error
+        target.classList.remove('favorited');
+        target.disabled = false;
+    }
+}
 
 
             async function initialize() {
