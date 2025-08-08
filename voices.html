@@ -5,31 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ElevenLabs Voice Library</title>
     <style>
-        /* [Your previous CSS is mostly the same] */
+        /* [Your CSS is the same] */
         body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background-color:#f4f7f9;color:#333;margin:0;padding:20px}.container{max-width:1200px;margin:0 auto;padding:20px;background-color:#fff;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1)}header{text-align:center;margin-bottom:25px;border-bottom:1px solid #e0e0e0;padding-bottom:20px}h1{color:#1a253c}.filter-container{display:flex;justify-content:center;align-items:center;gap:15px;margin-bottom:30px}.filter-container label{font-size:1.1em;font-weight:500}#language-filter{padding:10px 15px;font-size:1em;border:1px solid #ccc;border-radius:6px;background-color:#fff;cursor:pointer;min-width:200px}#voice-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}.voice-card{display:flex;flex-direction:column;background-color:#fff;border:1px solid #e0e6ed;border-radius:8px;padding:20px;box-shadow:0 2px 6px rgba(0,0,0,.05);transition:transform .2s ease,box-shadow .2s ease}.voice-card:hover{transform:translateY(-5px);box-shadow:0 6px 15px rgba(0,0,0,.1)}.voice-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.voice-card h3{margin:0;font-size:1.2em;color:#0056b3}.voice-card audio{width:100%;margin-top:auto}#status-message{text-align:center;font-size:1.2em;color:#777;padding:40px 0}.favorite-btn{background:0 0;border:none;cursor:pointer;font-size:1.8em;color:#ccc;transition:color .2s ease,transform .2s ease;padding:0 5px}.favorite-btn:hover{transform:scale(1.2)}.favorite-btn.favorited{color:#ffc107}.notification{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background-color:#28a745;color:#fff;padding:15px 25px;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,.2);opacity:0;visibility:hidden;transition:opacity .5s,visibility .5s;z-index:1000}.notification.show{opacity:1;visibility:visible}
-
-        /* --- NEW STYLES FOR LOAD MORE BUTTON --- */
-        .load-more-container {
-            text-align: center;
-            padding: 40px 0;
-        }
-        #load-more-btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            font-size: 1.1em;
-            font-weight: 500;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        #load-more-btn:hover {
-            background-color: #0056b3;
-        }
-        #load-more-btn.hidden {
-            display: none;
-        }
+        .load-more-container {text-align: center;padding: 20px 0;}
+        #load-more-btn {background-color: #007bff;color: white;border: none;padding: 12px 25px;font-size: 1.1em;font-weight: 500;border-radius: 6px;cursor: pointer;transition: background-color 0.2s ease;}
+        #load-more-btn:hover {background-color: #0056b3;}
+        #load-more-btn.hidden {display: none;}
+        .export-container {text-align: center; padding: 20px 0; margin-top: 20px; border-top: 1px solid #e0e0e0;}
+        #export-btn { background-color: #28a745; color: white; border: none; padding: 12px 25px; font-size: 1.1em; font-weight: 500; border-radius: 6px; cursor: pointer; transition: background-color 0.2s ease; }
+        #export-btn:hover { background-color: #218838; }
+        #export-btn.hidden { display: none; }
     </style>
 </head>
 <body>
@@ -45,34 +30,41 @@
         <div id="status-message">Loading voices...</div>
         <div id="voice-list"></div>
 
-        <!-- NEW: Container for the load more button -->
         <div class="load-more-container">
             <button id="load-more-btn" class="hidden">Load More</button>
+        </div>
+
+        <div class="export-container">
+            <button id="export-btn" class="hidden">Download Favorites as .txt File</button>
         </div>
     </div>
     
     <div id="notification" class="notification"></div>
 
     <script>
+        // This script is 100% frontend and will work perfectly on GitHub Pages.
         document.addEventListener('DOMContentLoaded', () => {
-            const GOOGLE_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby3CFsYyHES0XcwG2rH_EEoWD9Q0vueq5E9Sx-v_U_C1Qqw3tgdIeIs0EPCwbTLrfuV/exec';
-
             const voiceListContainer = document.getElementById('voice-list');
             const languageFilter = document.getElementById('language-filter');
             const statusMessage = document.getElementById('status-message');
             const notification = document.getElementById('notification');
-            const loadMoreBtn = document.getElementById('load-more-btn'); // Get the new button
+            const loadMoreBtn = document.getElementById('load-more-btn');
+            const exportBtn = document.getElementById('export-btn');
 
-            // --- NEW: State variables for lazy loading ---
-            const ITEMS_PER_PAGE = 100; // How many voices to load at a time
+            const ITEMS_PER_PAGE = 100;
             let currentPage = 0;
             let currentFilteredVoices = [];
-            // ------------------------------------------
-
             let allVoices = [];
             const LANGUAGES = [{code:"all",name:"All Languages"},{code:"en",name:"Anglais",active:!0},{code:"fr",name:"Français"},{code:"de",name:"Allemand"},{code:"es",name:"Espagnol"},{code:"ar",name:"Arabe"},{code:"pt",name:"Portugais"},{code:"tr",name:"Turc"},{code:"it",name:"Italien"},{code:"hi",name:"Hindi"},{code:"ru",name:"Russe"},{code:"ja",name:"Japonais"},{code:"ko",name:"Coréen"},{code:"zh",name:"Chinois"},{code:"vi",name:"Vietnamien"},{code:"pl",name:"Polonais"},{code:"ro",name:"Roumain"},{code:"nl",name:"Néerlandais"},{code:"sv",name:"Suédois"},{code:"fi",name:"Finnois"},{code:"no",name:"Norvégien"},{code:"da",name:"Danois"},{code:"hu",name:"Hongrois"},{code:"cs",name:"Tchèque"},{code:"el",name:"Grec"},{code:"th",name:"Thaï"},{code:"id",name:"Indonésien"},{code:"ms",name:"Malais"}];
             
-            // MODIFIED: This function now APPENDS voices instead of replacing everything
+            const FAVORITES_KEY = 'voiceLibraryFavorites';
+
+            const getFavorites = () => JSON.parse(localStorage.getItem(FAVORITES_KEY) || '[]');
+            const saveFavorites = (favorites) => {
+                localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+                exportBtn.classList.toggle('hidden', favorites.length === 0);
+            };
+            
             function renderVoices(voicesToRender) {
                 if (voicesToRender.length === 0 && currentPage === 1) {
                     voiceListContainer.innerHTML = '';
@@ -82,148 +74,116 @@
                     return;
                 }
                 statusMessage.style.display = 'none';
-
+                const currentFavorites = getFavorites();
                 voicesToRender.forEach(voice => {
                     const card = document.createElement('div');
                     card.className = 'voice-card';
+                    const isFavorited = currentFavorites.includes(voice.name);
                     card.innerHTML = `
                         <div class="voice-card-header">
                             <h3>${voice.name}</h3>
-                            <button class="favorite-btn" data-voice-name="${voice.name}" title="Add to favorites">★</button>
+                            <button class="favorite-btn ${isFavorited ? 'favorited' : ''}" data-voice-name="${voice.name}" title="Toggle favorite">★</button>
                         </div>
                         <audio controls src="${voice.preview_url}">Your browser does not support the audio element.</audio>
                     `;
-                    voiceListContainer.appendChild(card); // Append instead of replace
+                    voiceListContainer.appendChild(card);
                 });
             }
 
-            // NEW: Function to load and render the next batch of voices
             function loadAndRenderMore() {
                 currentPage++;
                 const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
                 const endIndex = startIndex + ITEMS_PER_PAGE;
-                
-                // Get the next "slice" of voices from the filtered list
                 const voicesToRender = currentFilteredVoices.slice(startIndex, endIndex);
-                
                 renderVoices(voicesToRender);
-
-                // Hide the "Load More" button if we've reached the end
-                if (endIndex >= currentFilteredVoices.length) {
-                    loadMoreBtn.classList.add('hidden');
-                } else {
-                    loadMoreBtn.classList.remove('hidden');
-                }
+                loadMoreBtn.classList.toggle('hidden', endIndex >= currentFilteredVoices.length);
             }
             
-            // MODIFIED: This function now resets the state and loads the FIRST page
             function filterAndRender() {
-                // Reset everything for the new filter
                 currentPage = 0;
-                voiceListContainer.innerHTML = ''; // Clear the list completely
-                
+                voiceListContainer.innerHTML = '';
                 const selectedLanguage = languageFilter.value;
                 currentFilteredVoices = (selectedLanguage === 'all')
                     ? allVoices
                     : allVoices.filter(voice => voice.language === selectedLanguage);
-                
-                loadAndRenderMore(); // Load the first page of the new filtered list
+                loadAndRenderMore();
             }
 
-            // [Unchanged functions: showNotification, handleFavoriteClick]
-function showNotification(message, isError = false) {
-    notification.textContent = message;
-    notification.style.backgroundColor = isError ? '#dc3545' : '#28a745';
-    notification.classList.add('show');
-    setTimeout(() => {
-        notification.classList.remove('show');
-    }, 2500); // Hide after 2.5 seconds
-}
+            function showNotification(message) {
+                notification.textContent = message;
+                notification.classList.add('show');
+                setTimeout(() => notification.classList.remove('show'), 3000);
+            }
 
-async function handleFavoriteClick(event) {
-    const target = event.target;
-    // Only proceed if a favorite button was clicked
-    if (!target.classList.contains('favorite-btn')) {
-        return;
-    }
+            function handleFavoriteClick(event) {
+                const target = event.target;
+                if (!target.classList.contains('favorite-btn')) return;
 
-    const voiceName = target.dataset.voiceName;
-    target.classList.add('favorited'); // Make star gold immediately
-    target.disabled = true; // Prevent multiple clicks
+                const voiceName = target.dataset.voiceName;
+                let currentFavorites = getFavorites();
+                
+                const index = currentFavorites.indexOf(voiceName);
+                if (index > -1) {
+                    currentFavorites.splice(index, 1); // Remove from favorites
+                    target.classList.remove('favorited');
+                } else {
+                    currentFavorites.push(voiceName); // Add to favorites
+                    target.classList.add('favorited');
+                }
+                saveFavorites(currentFavorites);
+            }
 
-    const payload = { voiceName: voiceName };
+            // --- THIS IS THE NEW CORE FUNCTIONALITY ---
+            function handleDownloadClick() {
+                const favorites = getFavorites();
+                if (favorites.length === 0) {
+                    showNotification("You haven't selected any favorites yet.");
+                    return;
+                }
+                // 1. Format the data into a string
+                const fileContent = "Favorite Voices Selection:\n\n" + favorites.join("\n");
 
-    try {
-        const response = await fetch(GOOGLE_WEB_APP_URL, {
-            method: 'POST',
-            // We are sending data across different domains (localhost -> google.com)
-            // so 'cors' mode is required.
-            mode: 'cors', 
-            headers: {
-                // We must tell the server we are sending JSON data
-                'Content-Type': 'application/json'
-            },
-            // The data must be converted from a JavaScript object to a JSON string
-            body: JSON.stringify(payload) 
-        });
-        
-        // Check if the network request itself was successful
-        if (!response.ok) {
-           throw new Error(`Network response was not ok. Status: ${response.status}`);
-        }
-        
-        // Parse the JSON response from our Apps Script
-        const result = await response.json();
+                // 2. Create a "Blob", which is like an in-memory file
+                const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });
 
-        // Check the 'status' field in the response from our script
-       if (result.result === 'success') { // Changed 'status' to 'result'
-            showNotification(`Voice "${voiceName}" added to spreadsheet!`);
-        } else {
-            // If our script reported an error, throw it to be caught below
-            throw new Error(result.message);
-        }
+                // 3. Create a hidden link element to trigger the download
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = "favorite-voices.txt"; // The name of the downloaded file
 
-    } catch (error) {
-        console.error('Error sending data to Google Sheet:', error);
-        showNotification(`Error saving "${voiceName}". Check console for details.`, true);
-        
-        // Revert the button to its original state on error
-        target.classList.remove('favorited');
-        target.disabled = false;
-    }
-}
-
+                // 4. Trigger the download and then clean up
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showNotification("File 'favorite-voices.txt' is downloading!");
+            }
 
             async function initialize() {
-                // [This section is the same, just simplified for brevity]
-                if (GOOGLE_WEB_APP_URL && !GOOGLE_WEB_APP_URL.includes('PASTE_')) {
-                    voiceListContainer.addEventListener('click', handleFavoriteClick);
-                } else {
-                    console.warn("Google Web App URL is not configured.");
-                    statusMessage.innerHTML = '<strong>Warning:</strong> Favorites feature is disabled. Please add your Web App URL to the script.';
-                }
+                voiceListContainer.addEventListener('click', handleFavoriteClick);
 
                 try {
+                    // Assuming your json file is at the same level or you provide the correct path
                     const response = await fetch('all_shared_voices_updated.json');
                     if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-                    const data = await response.json();
                     
-                    allVoices = data.voices;
+                    allVoices = (await response.json()).voices;
                     
-                    // Populate filter dropdown
                     LANGUAGES.forEach(lang => {
                         const option = document.createElement('option');
                         option.value = lang.code; option.textContent = lang.name;
                         if (lang.active) option.selected = true;
                         languageFilter.appendChild(option);
                     });
-
-                    // Initial load
+                    
                     filterAndRender(); 
                     
-                    // Event listeners
                     languageFilter.addEventListener('change', filterAndRender);
                     loadMoreBtn.addEventListener('click', loadAndRenderMore);
+                    exportBtn.addEventListener('click', handleDownloadClick); // Changed listener
+
+                    // Show export button if favorites already exist from a previous session
+                    exportBtn.classList.toggle('hidden', getFavorites().length === 0);
 
                 } catch (error) {
                     console.error("Failed to load voice data:", error);
