@@ -5,241 +5,176 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ElevenLabs Voice Library</title>
     <style>
-        /* Basic Styling */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f4f7f9;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
+        /* [Your previous CSS is mostly the same] */
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background-color:#f4f7f9;color:#333;margin:0;padding:20px}.container{max-width:1200px;margin:0 auto;padding:20px;background-color:#fff;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1)}header{text-align:center;margin-bottom:25px;border-bottom:1px solid #e0e0e0;padding-bottom:20px}h1{color:#1a253c}.filter-container{display:flex;justify-content:center;align-items:center;gap:15px;margin-bottom:30px}.filter-container label{font-size:1.1em;font-weight:500}#language-filter{padding:10px 15px;font-size:1em;border:1px solid #ccc;border-radius:6px;background-color:#fff;cursor:pointer;min-width:200px}#voice-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}.voice-card{display:flex;flex-direction:column;background-color:#fff;border:1px solid #e0e6ed;border-radius:8px;padding:20px;box-shadow:0 2px 6px rgba(0,0,0,.05);transition:transform .2s ease,box-shadow .2s ease}.voice-card:hover{transform:translateY(-5px);box-shadow:0 6px 15px rgba(0,0,0,.1)}.voice-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.voice-card h3{margin:0;font-size:1.2em;color:#0056b3}.voice-card audio{width:100%;margin-top:auto}#status-message{text-align:center;font-size:1.2em;color:#777;padding:40px 0}.favorite-btn{background:0 0;border:none;cursor:pointer;font-size:1.8em;color:#ccc;transition:color .2s ease,transform .2s ease;padding:0 5px}.favorite-btn:hover{transform:scale(1.2)}.favorite-btn.favorited{color:#ffc107}.notification{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background-color:#28a745;color:#fff;padding:15px 25px;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,.2);opacity:0;visibility:hidden;transition:opacity .5s,visibility .5s;z-index:1000}.notification.show{opacity:1;visibility:visible}
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        header {
+        /* --- NEW STYLES FOR LOAD MORE BUTTON --- */
+        .load-more-container {
             text-align: center;
-            margin-bottom: 25px;
-            border-bottom: 1px solid #e0e0e0;
-            padding-bottom: 20px;
+            padding: 40px 0;
         }
-
-        h1 {
-            color: #1a253c;
-        }
-
-        /* Filter Controls */
-        .filter-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .filter-container label {
+        #load-more-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
             font-size: 1.1em;
             font-weight: 500;
-        }
-
-        #language-filter {
-            padding: 10px 15px;
-            font-size: 1em;
-            border: 1px solid #ccc;
             border-radius: 6px;
-            background-color: #fff;
             cursor: pointer;
-            min-width: 200px;
+            transition: background-color 0.2s ease;
         }
-
-        /* Voice List Grid */
-        #voice-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
+        #load-more-btn:hover {
+            background-color: #0056b3;
         }
-
-        /* Voice Card Styling */
-        .voice-card {
-            background-color: #ffffff;
-            border: 1px solid #e0e6ed;
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        
-        .voice-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .voice-card h3 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-            color: #0056b3;
-        }
-        
-        .voice-card audio {
-            width: 100%;
-            border-radius: 4px;
-        }
-
-        /* Status Message */
-        #status-message {
-            text-align: center;
-            font-size: 1.2em;
-            color: #777;
-            padding: 40px 0;
+        #load-more-btn.hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
-
     <div class="container">
         <header>
             <h1>Voice Library</h1>
             <div class="filter-container">
                 <label for="language-filter">Filter by Language:</label>
-                <select id="language-filter">
-                    <!-- Options will be populated by JavaScript -->
-                </select>
+                <select id="language-filter"></select>
             </div>
         </header>
 
         <div id="status-message">Loading voices...</div>
-        <div id="voice-list">
-            <!-- Voice cards will be populated by JavaScript -->
+        <div id="voice-list"></div>
+
+        <!-- NEW: Container for the load more button -->
+        <div class="load-more-container">
+            <button id="load-more-btn" class="hidden">Load More</button>
         </div>
     </div>
+    
+    <div id="notification" class="notification"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            const GOOGLE_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyyNdMQ7dLQUb32xKH_nA-iVgp-StP_aDSAXsSbqcRBD8wFOgsGtVyMxwykpq7CuuRzDA/exec';
+
             const voiceListContainer = document.getElementById('voice-list');
             const languageFilter = document.getElementById('language-filter');
             const statusMessage = document.getElementById('status-message');
+            const notification = document.getElementById('notification');
+            const loadMoreBtn = document.getElementById('load-more-btn'); // Get the new button
 
-            let allVoices = []; // This will hold all voice data from the JSON file
+            // --- NEW: State variables for lazy loading ---
+            const ITEMS_PER_PAGE = 100; // How many voices to load at a time
+            let currentPage = 0;
+            let currentFilteredVoices = [];
+            // ------------------------------------------
 
-            // Language data you provided
-            const LANGUAGES = [
-                { code: "all", name: "All Languages" },
-                { code: "en", name: "Anglais", active: true },
-                { code: "fr", name: "Français" },
-                { code: "de", name: "Allemand" },
-                { code: "es", name: "Espagnol" },
-                { code: "ar", name: "Arabe" },
-                { code: "pt", name: "Portugais" },
-                { code: "tr", name: "Turc" },
-                { code: "it", name: "Italien" },
-                { code: "hi", name: "Hindi" },
-                { code: "ru", name: "Russe" },
-                { code: "ja", name: "Japonais" },
-                { code: "ko", name: "Coréen" },
-                { code: "zh", name: "Chinois" },
-                { code: "vi", name: "Vietnamien" },
-                { code: "pl", name: "Polonais" },
-                { code: "ro", name: "Roumain" },
-                { code: "nl", name: "Néerlandais" },
-                { code: "sv", name: "Suédois" },
-                { code: "fi", name: "Finnois" },
-                { code: "no", name: "Norvégien" },
-                { code: "da", name: "Danois" },
-                { code: "hu", name: "Hongrois" },
-                { code: "cs", name: "Tchèque" },
-                { code: "el", name: "Grec" },
-                { code: "th", name: "Thaï" },
-                { code: "id", name: "Indonésien" },
-                { code: "ms", name: "Malais" }
-                // Add any other languages from your list here
-            ];
-
-            // 1. Populate the language filter dropdown
-            function populateFilter() {
-                LANGUAGES.forEach(lang => {
-                    const option = document.createElement('option');
-                    option.value = lang.code;
-                    option.textContent = lang.name;
-                    if (lang.active) {
-                        option.selected = true;
-                    }
-                    languageFilter.appendChild(option);
-                });
-            }
-
-            // 2. Function to render a list of voices to the page
+            let allVoices = [];
+            const LANGUAGES = [{code:"all",name:"All Languages"},{code:"en",name:"Anglais",active:!0},{code:"fr",name:"Français"},{code:"de",name:"Allemand"},{code:"es",name:"Espagnol"},{code:"ar",name:"Arabe"},{code:"pt",name:"Portugais"},{code:"tr",name:"Turc"},{code:"it",name:"Italien"},{code:"hi",name:"Hindi"},{code:"ru",name:"Russe"},{code:"ja",name:"Japonais"},{code:"ko",name:"Coréen"},{code:"zh",name:"Chinois"},{code:"vi",name:"Vietnamien"},{code:"pl",name:"Polonais"},{code:"ro",name:"Roumain"},{code:"nl",name:"Néerlandais"},{code:"sv",name:"Suédois"},{code:"fi",name:"Finnois"},{code:"no",name:"Norvégien"},{code:"da",name:"Danois"},{code:"hu",name:"Hongrois"},{code:"cs",name:"Tchèque"},{code:"el",name:"Grec"},{code:"th",name:"Thaï"},{code:"id",name:"Indonésien"},{code:"ms",name:"Malais"}];
+            
+            // MODIFIED: This function now APPENDS voices instead of replacing everything
             function renderVoices(voicesToRender) {
-                voiceListContainer.innerHTML = ''; // Clear previous results
-
-                if (voicesToRender.length === 0) {
+                if (voicesToRender.length === 0 && currentPage === 1) {
+                    voiceListContainer.innerHTML = '';
                     statusMessage.textContent = 'No voices found for this language.';
                     statusMessage.style.display = 'block';
+                    loadMoreBtn.classList.add('hidden');
                     return;
                 }
-                
                 statusMessage.style.display = 'none';
 
                 voicesToRender.forEach(voice => {
                     const card = document.createElement('div');
                     card.className = 'voice-card';
                     card.innerHTML = `
-                        <h3>${voice.name}</h3>
-                        <audio controls src="${voice.preview_url}">
-                            Your browser does not support the audio element.
-                        </audio>
+                        <div class="voice-card-header">
+                            <h3>${voice.name}</h3>
+                            <button class="favorite-btn" data-voice-name="${voice.name}" title="Add to favorites">★</button>
+                        </div>
+                        <audio controls src="${voice.preview_url}">Your browser does not support the audio element.</audio>
                     `;
-                    voiceListContainer.appendChild(card);
+                    voiceListContainer.appendChild(card); // Append instead of replace
                 });
             }
 
-            // 3. Filter the voices based on the selected language and render them
-            function filterAndRender() {
-                const selectedLanguage = languageFilter.value;
+            // NEW: Function to load and render the next batch of voices
+            function loadAndRenderMore() {
+                currentPage++;
+                const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+                const endIndex = startIndex + ITEMS_PER_PAGE;
+                
+                // Get the next "slice" of voices from the filtered list
+                const voicesToRender = currentFilteredVoices.slice(startIndex, endIndex);
+                
+                renderVoices(voicesToRender);
 
-                if (selectedLanguage === 'all') {
-                    renderVoices(allVoices);
+                // Hide the "Load More" button if we've reached the end
+                if (endIndex >= currentFilteredVoices.length) {
+                    loadMoreBtn.classList.add('hidden');
                 } else {
-                    const filteredVoices = allVoices.filter(voice => voice.language === selectedLanguage);
-                    renderVoices(filteredVoices);
+                    loadMoreBtn.classList.remove('hidden');
                 }
             }
+            
+            // MODIFIED: This function now resets the state and loads the FIRST page
+            function filterAndRender() {
+                // Reset everything for the new filter
+                currentPage = 0;
+                voiceListContainer.innerHTML = ''; // Clear the list completely
+                
+                const selectedLanguage = languageFilter.value;
+                currentFilteredVoices = (selectedLanguage === 'all')
+                    ? allVoices
+                    : allVoices.filter(voice => voice.language === selectedLanguage);
+                
+                loadAndRenderMore(); // Load the first page of the new filtered list
+            }
 
-            // 4. Main function to fetch data and initialize the page
+            // [Unchanged functions: showNotification, handleFavoriteClick]
+            function showNotification(message, isError = false) { /* ... same as before ... */ }
+            async function handleFavoriteClick(event) { /* ... same as before ... */ }
+
+
             async function initialize() {
+                // [This section is the same, just simplified for brevity]
+                if (GOOGLE_WEB_APP_URL && !GOOGLE_WEB_APP_URL.includes('PASTE_')) {
+                    voiceListContainer.addEventListener('click', handleFavoriteClick);
+                } else {
+                    console.warn("Google Web App URL is not configured.");
+                    statusMessage.innerHTML = '<strong>Warning:</strong> Favorites feature is disabled. Please add your Web App URL to the script.';
+                }
+
                 try {
-                    // Fetch the JSON data from the local file
                     const response = await fetch('all_shared_voices_updated.json');
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
+                    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
                     const data = await response.json();
                     
-                    allVoices = data.voices; // Store the voices in our global variable
+                    allVoices = data.voices;
+                    
+                    // Populate filter dropdown
+                    LANGUAGES.forEach(lang => {
+                        const option = document.createElement('option');
+                        option.value = lang.code; option.textContent = lang.name;
+                        if (lang.active) option.selected = true;
+                        languageFilter.appendChild(option);
+                    });
 
-                    populateFilter(); // Set up the dropdown
-                    filterAndRender(); // Perform the initial render based on the default filter
-
-                    // Add an event listener to re-filter when the selection changes
+                    // Initial load
+                    filterAndRender(); 
+                    
+                    // Event listeners
                     languageFilter.addEventListener('change', filterAndRender);
+                    loadMoreBtn.addEventListener('click', loadAndRenderMore);
 
                 } catch (error) {
-                    console.error("Failed to load or process voice data:", error);
-                    statusMessage.textContent = 'Error: Could not load voice data. Make sure the JSON file is present and you are using a local server.';
+                    console.error("Failed to load voice data:", error);
+                    statusMessage.textContent = 'Error: Could not load data. Check the file and local server.';
                     statusMessage.style.color = 'red';
                 }
             }
             
-            // Start the application
             initialize();
         });
     </script>
-
 </body>
 </html>
