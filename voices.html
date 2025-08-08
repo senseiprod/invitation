@@ -176,7 +176,7 @@ async function handleFavoriteClick(event) {
         const result = await response.json();
 
         // Check the 'status' field in the response from our script
-        if (result.status === 'success') {
+       if (result.result === 'success') { // Changed 'status' to 'result'
             showNotification(`Voice "${voiceName}" added to spreadsheet!`);
         } else {
             // If our script reported an error, throw it to be caught below
