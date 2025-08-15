@@ -1,0 +1,214 @@
+ELEVENLABS SHARED VOICES - PARAMETER ANALYSIS REPORT
+==================================================
+
+Generated from: all_shared_voices_updated.json
+Total voices analyzed: 6000
+
+--- Unique values for 'CATEGORY' ---
+- high_quality
+- professional
+
+--- Unique values for 'GENDER' ---
+- female
+- male
+- neutral
+
+--- Unique values for 'AGE' ---
+- middle-aged
+- middle_aged
+- old
+- young
+
+--- Unique values for 'ACCENT' ---
+- aegean
+- african
+- african american
+- american
+- anatolian
+- andalusian
+- arabic
+- argentine
+- athenian
+- australian
+- balinese
+- bavarian
+- beijing mandarin
+- belgian
+- bengali
+- bergen
+- berlinerisch
+- bihari
+- boston
+- brabantian
+- brazilian
+- british
+- budapest
+- bulgarian
+- canadian
+- canary islands
+- cebuano
+- central
+- chicago
+- chilean
+- chinese
+- chungcheong
+- cockney
+- coimbatore
+- colombian
+- croatian
+- cuban
+- czech
+- danish
+- de-standard
+- dominican
+- dutch
+- eastern
+- ecuadorian
+- egyptian
+- en-american
+- en-british
+- en-canadian
+- en-filipino
+- en-indian
+- en-scottish
+- es-argentine
+- es-colombian
+- es-venezuelan
+- european
+- fil-cebuano
+- fil-standard
+- filipino
+- finnish
+- flemish
+- florentine
+- french
+- galician
+- german
+- gothenburg
+- gujarati
+- gulf
+- gyeongsang
+- hamgyong
+- haryanvi
+- helsinki
+- hindi
+- hong kong cantonese
+- id-standard
+- ilocano
+- indian
+- indonesian
+- irish
+- istanbul
+- italian
+- jamaican
+- japanese
+- javanese
+- jordanian
+- jutlandic
+- kanto
+- kiev
+- korean
+- kuwaiti
+- latin american
+- levantine
+- limburgish
+- macedonian
+- malay
+- malaysian
+- mazovian
+- meridional
+- mexican
+- milanese
+- modern standard
+- moravian
+- moroccan
+- moscow
+- neapolitan
+- new york
+- new zealand
+- nigerian
+- northern
+- oslo
+- palestinian
+- parisian
+- peninsular
+- peruvian
+- polish
+- portuguese
+- prague
+- puerto rican
+- punjabi
+- quebec
+- received pronunciation
+- rhine franconian
+- romanesco
+- romanian
+- russian
+- saint petersburg
+- saudi
+- saxon
+- scottish
+- seoul
+- sicilian
+- singapore mandarin
+- singaporean
+- slovak
+- sofia
+- south african
+- southern
+- spanish
+- standard
+- stockholm
+- sundanese
+- swedish
+- swiss
+- taiwan mandarin
+- tamil
+- transylvanian
+- turkish
+- ukrainian
+- us midwest
+- us northeast
+- us southern
+- venetian
+- venezuelan
+- welsh
+- western
+- yorkshire
+- zagreb
+- zealandic
+
+--- Unique values for 'LANGUAGE' ---
+- ar
+- bg
+- cs
+- da
+- de
+- el
+- en
+- es
+- fi
+- fil
+- fr
+- hi
+- hr
+- hu
+- id
+- it
+- ja
+- ko
+- ms
+- nl
+- no
+- pl
+- pt
+- ro
+- ru
+- sk
+- sv
+- ta
+- tr
+- uk
+- vi
+- zh
+
