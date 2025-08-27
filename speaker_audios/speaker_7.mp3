@@ -1,0 +1,6 @@
+HTTP/1.0 500 Internal Server Error
+Cache-Control: no-cache, private
+Content-Type:  application/json
+Date:          Mon, 18 Aug 2025 18:23:34 GMT
+
+{"success":false,"message":"An error occurred while generating the audio: HTTP request returned status code 400:\n{\"status\":400,\"message\":\"Model autonoe not found\"}\n"}
