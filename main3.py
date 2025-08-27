@@ -1,61 +1,81 @@
 import requests
 import os
 import time
-import json
 import re
 
 # --- CONFIGURATION ---
 # IMPORTANT: Change this to the URL where your backend application is running.
 BASE_URL = "http://localhost:8080" 
 OUTPUT_FOLDER = "audios_lahajati"
-MAX_ATTEMPTS = 3 # 1 initial try + 2 retries
-RETRY_DELAYS = [2, 4] # Delay in seconds for the 1st and 2nd retry
+MISSING_VOICES_FILE = "missing_voices.txt" # The input file for this script
+MAX_ATTEMPTS = 3
+RETRY_DELAYS = [2, 4]
 
-# The fixed SSML text to be used for every voice generation, as you specified.
+# The fixed SSML text to be used for every voice generation.
 TTS_TEXT = """مرحبا بكم فالموقع ديالنا، CastingVoixOff، أول پلاتفورم فالمغرب ديال التعليق الصوتي، وأول ذكا اصطناعي مغربي مية فالمية."""
 
 # --- SCRIPT START ---
 
 def sanitize_filename(name):
     """Removes characters that are invalid in filenames."""
-    # Remove invalid characters like / \ : * ? " < > |
     return re.sub(r'[\\/*?:"<>|]', "", name)
 
-def get_voices():
-    """Fetches the list of voices from the API."""
-    voices_url = f"{BASE_URL}/api/lahajati/voices-absolute-control?page=1&per_page=100"
-    print(f"Fetching voice list from: {voices_url}\n")
+def get_voices_from_txt(filename):
+    """Parses the missing_voices.txt file to get a list of voices to generate."""
+    print(f"Reading voice list from '{filename}'...")
+    voices_to_generate = []
     try:
-        response = requests.get(voices_url, timeout=15)
-        response.raise_for_status() # Raises an exception for bad status codes (4xx or 5xx)
+        with open(filename, 'r', encoding='utf-8') as f:
+            for line in f:
+                # Target lines look like: "display_name: سيف, id_voice: Z0d9..."
+                if "display_name:" in line and "id_voice:" in line:
+                    try:
+                        # Split the line into two parts at the comma
+                        part1, part2 = line.strip().split(',', 1)
+                        
+                        # Extract the values by splitting at the colon and stripping whitespace
+                        display_name = part1.split(':', 1)[1].strip()
+                        id_voice = part2.split(':', 1)[1].strip()
+                        
+                        voices_to_generate.append({
+                            "display_name": display_name,
+                            "id_voice": id_voice
+                        })
+                    except (ValueError, IndexError):
+                        print(f"Warning: Could not parse line: '{line.strip()}'")
         
-        data = response.json()
-        if data.get("success") and "data" in data:
-            print(f"Successfully fetched {len(data['data'])} voices.")
-            return data["data"]
-        else:
-            print("Error: The API response was not successful or is malformed.")
-            print("Response:", response.text)
+        if not voices_to_generate:
+            print("No valid voice entries found in the file.")
             return None
             
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred while fetching the voices: {e}")
+        print(f"Found {len(voices_to_generate)} voices to process from the file.")
+        return voices_to_generate
+
+    except FileNotFoundError:
+        print(f"FATAL ERROR: The input file '{filename}' was not found.")
+        print("Please make sure the file exists in the same directory as the script.")
         return None
 
 def generate_speech_for_voice(voice):
     """Generates audio for a single voice with a retry mechanism."""
     tts_url = f"{BASE_URL}/api/lahajati/absolute-control"
     id_voice = voice.get("id_voice")
-    display_name = voice.get("display_name") # Still needed for the filename
+    display_name = voice.get("display_name")
 
     if not id_voice or not display_name:
-        print(f"Skipping invalid voice entry: {voice}")
+        print(f"Skipping invalid voice entry from file: {voice}")
+        return
+
+    # Check if the file already exists to avoid re-generating
+    filename = sanitize_filename(display_name)
+    output_path = os.path.join(OUTPUT_FOLDER, f"{filename}.mp3")
+    
+    if os.path.exists(output_path):
+        print(f"--- SKIPPING '{display_name}' (Audio file already exists) ---")
         return
 
     print(f"--- Processing voice: '{display_name}' (ID: {id_voice}) ---")
-
-    # --- THIS IS THE FINAL CORRECTED PAYLOAD ---
-    # It uses the required structure with the FIXED TTS_TEXT for every voice.
+    
     payload = {
         "text": TTS_TEXT,
         "id_voice": id_voice,
@@ -63,29 +83,23 @@ def generate_speech_for_voice(voice):
         "performance_id": "1280",
         "dialect_id": "35"
     }
-    # --- END OF CORRECTION ---
-    
-    # The output filename is still based on the voice's display_name.
-    filename = sanitize_filename(display_name)
-    output_path = os.path.join(OUTPUT_FOLDER, f"{filename}.mp3")
 
     for attempt in range(MAX_ATTEMPTS):
         try:
             print(f"Attempt {attempt + 1}/{MAX_ATTEMPTS}: Generating speech...")
-            response = requests.post(tts_url, json=payload, timeout=30) # 30-second timeout for generation
+            response = requests.post(tts_url, json=payload, timeout=30)
             
             if response.status_code == 200 and response.content:
                 with open(output_path, 'wb') as f:
                     f.write(response.content)
                 print(f"SUCCESS: Saved audio to '{output_path}'\n")
-                return # Exit the function on success
+                return
             else:
                 print(f"FAILED: Received status code {response.status_code}. Response: {response.text}")
 
         except requests.exceptions.RequestException as e:
             print(f"FAILED: An error occurred during the request: {e}")
 
-        # If not the last attempt, wait before retrying
         if attempt < MAX_ATTEMPTS - 1:
             delay = RETRY_DELAYS[attempt]
             print(f"Retrying in {delay} seconds...")
@@ -95,24 +109,22 @@ def generate_speech_for_voice(voice):
 
 
 def main():
-    """Main function to run the script."""
-    print("Starting Lahajati voice generation script...")
+    """Main function to run the script for generating missing voices."""
+    print("--- Starting Script to Generate MISSING Voices ---")
 
-    # 1. Create the output directory if it doesn't exist
-    if not os.path.exists(OUTPUT_FOLDER):
-        print(f"Creating output folder: '{OUTPUT_FOLDER}'")
-        os.makedirs(OUTPUT_FOLDER)
-
-    # 2. Get the list of all voices
-    voices = get_voices()
+    # 1. Get the list of voices to process from the text file
+    voices = get_voices_from_txt(MISSING_VOICES_FILE)
     
     if not voices:
-        print("Could not retrieve voices. Exiting.")
+        print("No voices to process. Exiting.")
         return
 
-    # 3. Iterate through each voice and generate speech
+    # 2. Ensure the output directory exists (preserves existing files)
+    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+
+    # 3. Iterate through ONLY the missing voices and generate speech
     for i, voice in enumerate(voices, 1):
-        print(f"Processing voice {i}/{len(voices)}")
+        print(f"\nProcessing voice {i}/{len(voices)} from the list")
         generate_speech_for_voice(voice)
         
     print("--- Script Finished ---")
